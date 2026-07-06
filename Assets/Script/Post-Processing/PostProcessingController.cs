@@ -125,4 +125,118 @@ public class PostProcessingController : MonoBehaviour
 
         colorAdjustments.colorFilter.value = colorAdjustmentsValue; // Ensure final value is set
     }
+
+    public void TemporaryEffect(float Intensity, float duration, string effectType)
+    {
+        StartCoroutine(TemporaryEffectCoroutine(Intensity, duration, effectType));
+    }
+
+    private IEnumerator TemporaryEffectCoroutine(float Intensity, float duration, string effectType)
+    {
+        float t = 0f;
+        float halfDuration = duration / 2f;
+
+        // Apply the effect based on the effectType
+        switch (effectType)
+            {
+                // Bloom Setting //
+                case "Bloom":
+                    float initialIntensity = bloom.intensity.value;
+                    while (t < halfDuration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(initialIntensity, Intensity, t / halfDuration);
+                        bloom.intensity.value = lerpValue;
+                        yield return null;
+                    }
+                    while (t < duration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(Intensity, initialIntensity, (t - halfDuration) / halfDuration);
+                        bloom.intensity.value = initialIntensity;
+                        yield return null;
+                    }
+                    break;
+                // Vignette Setting //
+                case "Vignette":
+                    float initialIntensity = vignette.intensity.value;
+                    while (t < halfDuration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(initialIntensity, Intensity, t / halfDuration);
+                        vignette.intensity.value = lerpValue;
+                        yield return null;
+                    }
+                    while (t < duration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(Intensity, initialIntensity, (t - halfDuration) / halfDuration);
+                        vignette.intensity.value = initialIntensity;
+                        yield return null;
+                    }
+                    break;
+                // Color Adjustments Setting //
+                case "ColorAdjustmentsIntensity":
+                    Color initialColor = colorAdjustments.colorFilter.value;
+                    Color newColor = new Color(1f, 1f, 1f,Intensity);
+                    while (t < halfDuration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(initialColor, newColor, t / halfDuration);
+                        colorAdjustments.colorFilter.value = lerpValue;
+                        yield return null;
+                    }
+                    while (t < duration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(newColor, initialColor, (t - halfDuration) / halfDuration);
+                        colorAdjustments.colorFilter.value = initialColor;
+                        yield return null;
+                    }
+                    break;
+                // Color Adjustments Red Setting //
+                case "ColorAdjustmentsRed":
+                    float ReverseIntensity = 1f - Intensity;
+                    Color initialColor = colorAdjustments.colorFilter.value;
+                    Color newColor = new Color(1f, ReverseIntensity, ReverseIntensity, 0f);
+                    while (t < halfDuration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(initialColor, newColor, t / halfDuration);
+                        colorAdjustments.colorFilter.value = lerpValue;
+                        yield return null;
+                    }
+                    while (t < duration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(newColor, initialColor, (t - halfDuration) / halfDuration);
+                        colorAdjustments.colorFilter.value = initialColor;
+                        yield return null;
+                    }
+                    break;
+                // Color Adjustments Green Setting //
+                case "ColorAdjustmentsGreen":
+                    float ReverseIntensity = 1f - Intensity;
+                    Color initialColor = colorAdjustments.colorFilter.value;
+                    Color newColor = new Color(ReverseIntensity, 1f, ReverseIntensity, 0f);
+                    while (t < halfDuration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(initialColor, newColor, t / halfDuration);
+                        colorAdjustments.colorFilter.value = lerpValue;
+                        yield return null;
+                    }
+                    while (t < duration)
+                    {
+                        t += Time.deltaTime;
+                        float lerpValue = Mathf.Lerp(newColor, initialColor, (t - halfDuration) / halfDuration);
+                        colorAdjustments.colorFilter.value = initialColor;
+                        yield return null;
+                    }
+                    break;
+                default:
+                    Debug.LogWarning("Unknown effect type: " + effectType);
+                    break;
+            }
+    }
 }
