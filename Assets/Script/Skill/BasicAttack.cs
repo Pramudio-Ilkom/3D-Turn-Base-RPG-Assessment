@@ -1,14 +1,11 @@
- using unityEngine;
+ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Skill/Basic Attack")]
 public class BasicAttack : Skill
 {
-    bool isCasterFriendly;
-    bool isTargetFriendly;
-
     public override void Use(Unit caster, Unit[] target)
     {
-        float damage = caster.ATK;
+        float damage = caster.currentATK;
         foreach (Unit unit in target)
         {
             unit.TakeDamage(damage);

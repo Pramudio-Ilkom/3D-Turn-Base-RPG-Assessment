@@ -16,7 +16,9 @@ public class Stats : ScriptableObject
     [Header("SPD")]
     public float SPD;
     [Header("Friendly or Enemy")]
-    public bool Friendly = true;
+    public bool Friendly;
+    [Header("Player")]
+    public bool Player;
     [Header("Starting Skill")]
     public Skill[] startingSkill;
 }

@@ -7,7 +7,7 @@ public class GameBattleManager : MonoBehaviour
     public int number_of_units = 10;
     public GameObject[] units = new GameObject[10];
     public Transform[] unit_positions = new Transform[10];
-    stats[] unit_stats = new stats[10];
+    Unit[] unit_stats = new Unit[10];
 
     [Header("Action Order")]
     public float[] ActionOrder = new float[10];
@@ -21,7 +21,7 @@ public class GameBattleManager : MonoBehaviour
         }
         for (int i = 0; i < number_of_units; i++)
         {
-            unit_stats[i] = units[i].GetComponent<stats>();
+            unit_stats[i] = units[i].GetComponent<Unit>();
         }
         
     }

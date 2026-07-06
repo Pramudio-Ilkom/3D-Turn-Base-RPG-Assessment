@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6521d9d5914ca724284fe206bc597724, type: 3}
+  m_Name: PlayAble1
+  m_EditorClassIdentifier: Assembly-CSharp::Stats
+  HP: 1000
+  ATK: 300
+  DEF: 40
+  SPD: 100
+  Friendly: 1
+  Player: 1
+  startingSkill:
+  - {fileID: 11400000, guid: 0f87d5cc58f445640af4a8ae0543b9c4, type: 2}
+  - {fileID: 11400000, guid: 5c5c76529e1065a4d8c419a049968e3c, type: 2}

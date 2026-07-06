@@ -1,4 +1,4 @@
-    using unityEngine;
+    using UnityEngine;
 
     public class Unit : MonoBehaviour
     {
@@ -7,14 +7,15 @@
         public PostProcessingController postProcessingManager;
         [Header("Stats")]
         public Stats stats;
+        private Renderer meshRenderer;
         [Header("Skills")]
         public Skill[] skills;
 
         // Current stats
-        private float currentHP;
-        private float currentATK;
-        private float currentDEF;
-        private float currentSPD;
+        public float currentHP;
+        public float currentATK;
+        public float currentDEF;
+        public float currentSPD;
 
         [Header("Status")]
         public bool isPlayer;
@@ -23,13 +24,21 @@
 
         private void Awake()
         {
-            battleManager = FindFirstObjectOfType<GameBattleManager>();
-            postProcessingManager = FindFirstObjectOfType<PostProcessingController>();
+            meshRenderer = GetComponent<Renderer>();
+            battleManager = FindFirstObjectByType<GameBattleManager>();
+            postProcessingManager = FindFirstObjectByType<PostProcessingController>();
             currentHP = stats.HP;
             currentATK = stats.ATK;
             currentDEF = stats.DEF;
             currentSPD = stats.SPD;
+            isPlayer = stats.Player;
+            isFriendly = stats.Friendly;
             isAlive = true;
+        }
+
+        public float ActionValue()
+        {
+            return 10000 / currentSPD;
         }
 
         // HP Modifier //
@@ -44,18 +53,19 @@
             if(isPlayer && isFriendly)
             {
                 postProcessingManager.TemporaryEffect(2f, 0.5f,"Bloom");
-                postProcessingManager.TemporaryEffect(2f, 0.5f,"Vignette");
-                postProcessingManager.TemporaryEffect(2f, 0.5f,"ColorAdjustmentsRed");
+                postProcessingManager.TemporaryEffect(0.5f, 0.5f,"Vignette");
+                postProcessingManager.TemporaryEffect(0.3f, 0.5f,"ColorAdjustmentsRed");
+                Debug.Log("Current HP: " + currentHP + ", Max HP: " + stats.HP);
                 if(currentHP <= stats.HP * 0.3f)
                 {
                     float HPPercentage = currentHP / stats.HP;
-                    float VignetteIntensityMultiplier = (1f - HPPercentage)* 0.5f;
-                    Color ColorMultiplier = new Color(1f, HPPercentage, HPPercentage, 0f);
+                    float VignetteIntensityMultiplier = 0.6f - HPPercentage;
+                    Color ColorMultiplier = new Color(1f, HPPercentage*2f, HPPercentage*2f, 0f);
                     postProcessingManager.VignetteChange(VignetteIntensityMultiplier, 0.5f);
                     postProcessingManager.ColorAdjustmentsChange(ColorMultiplier, 0.5f);
                 }
             }
-            elif(!isPlayer && isFriendly)
+            else if(!isPlayer && isFriendly)
             {
                 postProcessingManager.TemporaryEffect(2f, 0.5f,"Bloom");
                 postProcessingManager.TemporaryEffect(1f, 0.5f,"Vignette");
