@@ -4,26 +4,40 @@ using UnityEngine;
 public class GameBattleManager : MonoBehaviour
 {
     [Header("Units")]
-    public int number_of_units = 10;
-    public GameObject[] units = new GameObject[10];
-    public Transform[] unit_positions = new Transform[10];
-    Unit[] unit_stats = new Unit[10];
+    private int number_of_units;
+    public GameObject[] units;
+    public Transform[] friendly_positions;
+    public Transform[] enemy_positions;
+    Unit[] unit_stats;
 
     [Header("Action Order")]
-    public float[] ActionOrder = new float[10];
+    public float[] ActionOrder;
     int whoseturn;
 
     private void Awake()
     {
-        for (int i = 0; i < number_of_units; i++)
-        {
-            units[i].transform.position = unit_positions[i].position;
-        }
+        number_of_units = units.Length;
+        ActionOrder = new float[number_of_units];
+        unit_stats = new Unit[number_of_units];
+        int friendly_count = 0;
+        int enemy_count = 0;
         for (int i = 0; i < number_of_units; i++)
         {
             unit_stats[i] = units[i].GetComponent<Unit>();
         }
-        
+        for (int i = 0; i < number_of_units; i++)
+        {
+            if (unit_stats[i].isFriendly)
+            {
+                units[i].transform.position = friendly_positions[friendly_count].position;
+                friendly_count++;
+            }
+            else
+            {
+                units[i].transform.position = enemy_positions[enemy_count].position;
+                enemy_count++;
+            }
+        }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -52,9 +66,11 @@ public class GameBattleManager : MonoBehaviour
             if (ActionOrder[i] == MinimumValue)
             {
                 whoseturn = i;
-                ActionOrder[i] += unit_stats[i].ActionValue();
             }
-            ActionOrder[i] -= MinimumValue;
+            else
+            {
+                ActionOrder[i] -= MinimumValue;
+            }
         }
     }
 }
