@@ -1,10 +1,8 @@
  using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Heal", menuName = "Skill/Heal")]
+[CreateAssetMenu(menuName = "Skill/Heal")]
 public class Heal : Skill
 {
-    [Header("Skill Name")]
-    public string skillName = "Heal";
     [Header("Heal Multiplier")]
     public float healMultiplier = 0.6f;
 

@@ -54,8 +54,8 @@
             {
                 postProcessingManager.TemporaryEffect(2f, 0.5f,"Bloom");
                 postProcessingManager.TemporaryEffect(0.5f, 0.5f,"Vignette");
-                postProcessingManager.TemporaryEffect(0.3f, 0.5f,"ColorAdjustmentsRed");
-                Debug.Log("Current HP: " + currentHP + ", Max HP: " + stats.HP);
+                postProcessingManager.TemporaryEffect(0.3f, 0.5f,"ColorAdjustmentsRed",0.5f);
+                // Debug.Log("Current HP: " + currentHP + ", Max HP: " + stats.HP);
                 if(currentHP <= stats.HP * 0.3f)
                 {
                     float HPPercentage = currentHP / stats.HP;

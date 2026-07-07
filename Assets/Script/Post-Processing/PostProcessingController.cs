@@ -130,12 +130,12 @@ public class PostProcessingController : MonoBehaviour
         colorAdjustments.colorFilter.value = colorAdjustmentsValue; // Ensure final value is set
     }
 
-    public void TemporaryEffect(float Intensity, float duration, string effectType)
+    public void TemporaryEffect(float Intensity, float duration, string effectType, float waitFrames=0f)
     {
-        StartCoroutine(TemporaryEffectCoroutine(Intensity, duration, effectType));
+        StartCoroutine(TemporaryEffectCoroutine(Intensity, duration, effectType, waitFrames));
     }
 
-    private IEnumerator TemporaryEffectCoroutine(float Intensity, float duration, string effectType)
+    private IEnumerator TemporaryEffectCoroutine(float Intensity, float duration, string effectType, float waitFrames=0f)
     {
         float elapsedTime = 0f;
         float halfDuration = duration / 2f;
@@ -251,5 +251,6 @@ public class PostProcessingController : MonoBehaviour
                     Debug.LogWarning("Unknown effect type: " + effectType);
                     break;
             }
+            yield return new WaitForSeconds(waitFrames); // Wait for the specified number of frames
     }
 }

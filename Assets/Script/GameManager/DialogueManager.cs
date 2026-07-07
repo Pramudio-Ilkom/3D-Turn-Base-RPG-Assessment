@@ -1,4 +1,5 @@
 using System.Data;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -54,7 +55,7 @@ public class DialogueManager : MonoBehaviour
         dialogueBox.SetActive(false);
     }
 
-    IEnumerator TypeDialogue(string dialogue)
+    private IEnumerator TypeDialogue(string dialogue)
     {
         dialogueText.text = dialogue;
         dialogueText.maxVisibleCharacters = 0;
@@ -65,7 +66,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void SkipDialogue(string[] dialogue)
+    public void SkipDialogue(string dialogue)
     {
         StopAllCoroutines();
         dialogueText.maxVisibleCharacters = dialogue.Length;
