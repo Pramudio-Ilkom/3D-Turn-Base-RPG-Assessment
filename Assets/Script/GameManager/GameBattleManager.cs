@@ -8,13 +8,18 @@ public class GameBattleManager : MonoBehaviour
     public GameObject[] units;
     public Transform[] friendly_positions;
     public Transform[] enemy_positions;
-    Unit[] unit_stats;
-    int friendly_count = 0;
-    int enemy_count = 0;
+    public Unit[] unit_stats;
+    public int friendly_count = 0;
+    public int enemy_count = 0;
 
     [Header("Action Order")]
     public float[] ActionOrder;
     int whoseturn;
+
+    //testing
+    public Unit[] Kontol = new Unit[1];
+
+    //testing
 
     private void Awake()
     {
@@ -30,11 +35,13 @@ public class GameBattleManager : MonoBehaviour
             if (unit_stats[i].isFriendly)
             {
                 units[i].transform.position = friendly_positions[friendly_count].position;
+                units[i].transform.rotation = friendly_positions[friendly_count].rotation;
                 friendly_count++;
             }
             else
             {
                 units[i].transform.position = enemy_positions[enemy_count].position;
+                units[i].transform.rotation = enemy_positions[enemy_count].rotation;
                 enemy_count++;
             }
         }
@@ -43,6 +50,9 @@ public class GameBattleManager : MonoBehaviour
     void Start()
     {
         ActionOrderStart();
+        Kontol[0] = unit_stats[1];
+        unit_stats[0].UseSkill(0, 
+                               Kontol);
     }
 
     // Update is called once per frame

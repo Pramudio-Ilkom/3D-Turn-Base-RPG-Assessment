@@ -16,3 +16,5 @@ MonoBehaviour:
   isCasterFriendly: 0
   isTargetFriendly: 0
   isSingleTarget: 0
+  skillDescription: serangboss
+  damageMultiplier: 1

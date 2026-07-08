@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Skill", menuName = "Skill")]
@@ -12,7 +13,8 @@ public abstract class Skill : ScriptableObject
     [Header("Skill Description")]
     public string skillDescription;
 
-    public abstract void Use(Unit caster, Unit[] target);
-    public abstract IEnumerator Use(Unit caster, Unit[] target);
-
+    public abstract IEnumerator Use(Unit caster, 
+                                    Unit[] target);
+    public abstract void Effect(Unit caster, 
+                                Unit[] target);
 }
