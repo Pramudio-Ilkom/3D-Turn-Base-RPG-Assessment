@@ -31,12 +31,18 @@ public class PostProcessingController : MonoBehaviour
     {
     }
 
-    void dyingEffect(float bloomIntensity, float vignetteIntensity, Color colorAdjustmentsValue)
+    void dyingEffect(float bloomIntensity, 
+                     float vignetteIntensity, 
+                     Color colorAdjustmentsValue)
     {
-        StartCoroutine(dyingEffectCoroutine(bloomIntensity, vignetteIntensity, colorAdjustmentsValue));
+        StartCoroutine(dyingEffectCoroutine(bloomIntensity, 
+                                            vignetteIntensity, 
+                                            colorAdjustmentsValue));
     }
 
-    private IEnumerator dyingEffectCoroutine(float bloomIntensity, float vignetteIntensity, Color colorAdjustmentsValue)
+    private IEnumerator dyingEffectCoroutine(float bloomIntensity, 
+                                             float vignetteIntensity, 
+                                             Color colorAdjustmentsValue)
     {
         float duration = 10f; // Duration of the effect in seconds
         float elapsedTime = 0f;
@@ -49,13 +55,19 @@ public class PostProcessingController : MonoBehaviour
             float t = elapsedTime / duration;
 
             // Lerp the bloom intensity
-            bloom.intensity.value = Mathf.Lerp(initialBloomIntensity, bloomIntensity, t);
+            bloom.intensity.value = Mathf.Lerp(initialBloomIntensity, 
+                                               bloomIntensity, 
+                                               t);
 
             // Lerp the vignette intensity
-            vignette.intensity.value = Mathf.Lerp(initialVignetteIntensity, vignetteIntensity, t);
+            vignette.intensity.value = Mathf.Lerp(initialVignetteIntensity, 
+                                                  vignetteIntensity, 
+                                                  t);
 
             // Lerp the color adjustments
-            colorAdjustments.colorFilter.value = Color.Lerp(initialColorAdjustmentsValue, colorAdjustmentsValue, t);
+            colorAdjustments.colorFilter.value = Color.Lerp(initialColorAdjustmentsValue, 
+                                                            colorAdjustmentsValue, 
+                                                            t);
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -67,12 +79,15 @@ public class PostProcessingController : MonoBehaviour
         colorAdjustments.colorFilter.value = colorAdjustmentsValue;
     }
     
-    public void BloomChange(float bloomIntensity, float duration)
+    public void BloomChange(float bloomIntensity, 
+                            float duration)
     {
-        StartCoroutine(BloomChangeCoroutine(bloomIntensity, duration));
+        StartCoroutine(BloomChangeCoroutine(bloomIntensity, 
+                                            duration));
     }
 
-    private IEnumerator BloomChangeCoroutine(float bloomIntensity, float duration)
+    private IEnumerator BloomChangeCoroutine(float bloomIntensity, 
+                                             float duration)
     {
         float elapsedTime = 0f;
         float initialIntensity = bloom.intensity.value;
@@ -88,12 +103,15 @@ public class PostProcessingController : MonoBehaviour
         bloom.intensity.value = bloomIntensity; // Ensure final value is set
     }
 
-    public void VignetteChange(float vignetteIntensity, float duration)
+    public void VignetteChange(float vignetteIntensity, 
+                               float duration)
     {
-        StartCoroutine(VignetteChangeCoroutine(vignetteIntensity, duration));
+        StartCoroutine(VignetteChangeCoroutine(vignetteIntensity, 
+                                               duration));
     }
 
-    private IEnumerator VignetteChangeCoroutine(float vignetteIntensity, float duration)
+    private IEnumerator VignetteChangeCoroutine(float vignetteIntensity, 
+                                                float duration)
     {
         float elapsedTime = 0f;
         float initialIntensity = vignette.intensity.value;
@@ -101,7 +119,9 @@ public class PostProcessingController : MonoBehaviour
         while (elapsedTime < duration)
         {
             float t = elapsedTime / duration;
-            vignette.intensity.value = Mathf.Lerp(initialIntensity, vignetteIntensity, t);
+            vignette.intensity.value = Mathf.Lerp(initialIntensity, 
+                                                  vignetteIntensity, 
+                                                  t);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -109,12 +129,15 @@ public class PostProcessingController : MonoBehaviour
         vignette.intensity.value = vignetteIntensity; // Ensure final value is set
     }
 
-    public void ColorAdjustmentsChange(Color colorAdjustmentsValue, float duration)
+    public void ColorAdjustmentsChange(Color colorAdjustmentsValue, 
+                                       float duration)
     {
-        StartCoroutine(ColorAdjustmentsChangeCoroutine(colorAdjustmentsValue, duration));
+        StartCoroutine(ColorAdjustmentsChangeCoroutine(colorAdjustmentsValue, 
+                                                       duration));
     }
 
-    private IEnumerator ColorAdjustmentsChangeCoroutine(Color colorAdjustmentsValue, float duration)
+    private IEnumerator ColorAdjustmentsChangeCoroutine(Color colorAdjustmentsValue, 
+                                                        float duration)
     {
         float elapsedTime = 0f;
         Color initialColor = colorAdjustments.colorFilter.value;
@@ -130,12 +153,21 @@ public class PostProcessingController : MonoBehaviour
         colorAdjustments.colorFilter.value = colorAdjustmentsValue; // Ensure final value is set
     }
 
-    public void TemporaryEffect(float Intensity, float duration, string effectType, float waitFrames=0f)
+    public void TemporaryEffect(float Intensity, 
+                                float duration, 
+                                string effectType, 
+                                float waitFrames=0f)
     {
-        StartCoroutine(TemporaryEffectCoroutine(Intensity, duration, effectType, waitFrames));
+        StartCoroutine(TemporaryEffectCoroutine(Intensity, 
+                                                duration, 
+                                                effectType, 
+                                                waitFrames));
     }
 
-    private IEnumerator TemporaryEffectCoroutine(float Intensity, float duration, string effectType, float waitFrames=0f)
+    private IEnumerator TemporaryEffectCoroutine(float Intensity, 
+                                                 float duration, 
+                                                 string effectType, 
+                                                 float waitFrames=0f)
     {
         float elapsedTime = 0f;
         float halfDuration = duration / 2f;
@@ -150,7 +182,9 @@ public class PostProcessingController : MonoBehaviour
                     while (elapsedTime < halfDuration)
                     {
                         float t = elapsedTime / halfDuration;
-                        bloom.intensity.value = Mathf.Lerp(initialBloomIntensity, Intensity, t);
+                        bloom.intensity.value = Mathf.Lerp(initialBloomIntensity, 
+                                                           Intensity, 
+                                                           t);
                         elapsedTime += Time.deltaTime;
                         yield return null;
                     }
@@ -158,7 +192,9 @@ public class PostProcessingController : MonoBehaviour
                     while (elapsedTime < duration)
                     {
                         float t = (elapsedTime - halfDuration) / halfDuration;
-                        bloom.intensity.value = Mathf.Lerp(Intensity, initialBloomIntensity, t);
+                        bloom.intensity.value = Mathf.Lerp(Intensity, 
+                                                           initialBloomIntensity, 
+                                                           t);
                         elapsedTime += Time.deltaTime;
                         yield return null;
                     }
@@ -170,7 +206,9 @@ public class PostProcessingController : MonoBehaviour
                     while (elapsedTime < halfDuration)
                     {
                         float t = elapsedTime / halfDuration;
-                        vignette.intensity.value = Mathf.Lerp(initialVignetteIntensity, Intensity, t);
+                        vignette.intensity.value = Mathf.Lerp(initialVignetteIntensity, 
+                                                              Intensity, 
+                                                              t);
                         elapsedTime += Time.deltaTime;
                         yield return null;
                     }
@@ -178,7 +216,9 @@ public class PostProcessingController : MonoBehaviour
                     while (elapsedTime < duration)
                     {
                         float t = (elapsedTime - halfDuration) / halfDuration;
-                        vignette.intensity.value = Mathf.Lerp(Intensity, initialVignetteIntensity, t);
+                        vignette.intensity.value = Mathf.Lerp(Intensity, 
+                                                              initialVignetteIntensity, 
+                                                              t);
                         elapsedTime += Time.deltaTime;
                         yield return null;
                     }
@@ -192,7 +232,9 @@ public class PostProcessingController : MonoBehaviour
                     {
                         float t = elapsedTime / halfDuration;
                         elapsedTime += Time.deltaTime;
-                        colorAdjustments.colorFilter.value = Color.Lerp(initialColorIntensity, newColorIntensity, t);
+                        colorAdjustments.colorFilter.value = Color.Lerp(initialColorIntensity, 
+                                                                        newColorIntensity, 
+                                                                        t);
                         yield return null;
                     }
                     colorAdjustments.colorFilter.value = newColorIntensity; // Ensure final value is set
@@ -200,7 +242,9 @@ public class PostProcessingController : MonoBehaviour
                     {
                         float t = (elapsedTime - halfDuration) / halfDuration;
                         elapsedTime += Time.deltaTime;
-                        colorAdjustments.colorFilter.value = Color.Lerp(newColorIntensity, initialColorIntensity, t);
+                        colorAdjustments.colorFilter.value = Color.Lerp(newColorIntensity, 
+                                                                        initialColorIntensity, 
+                                                                        t);
                         yield return null;
                     }
                     colorAdjustments.colorFilter.value = initialColorIntensity; // Ensure final value is set
@@ -208,11 +252,16 @@ public class PostProcessingController : MonoBehaviour
                 // Color Adjustments Red Setting //
                 case "ColorAdjustmentsRed":
                     Color initialColorRed = colorAdjustments.colorFilter.value;
-                    Color newColorRed = new Color(1f, ReverseIntensity, ReverseIntensity, 0f);
+                    Color newColorRed = new Color(1f, 
+                                                  ReverseIntensity, 
+                                                  ReverseIntensity, 
+                                                  0f);
                     while (elapsedTime < halfDuration)
                     {
                         float t = elapsedTime / halfDuration;
-                        colorAdjustments.colorFilter.value = Color.Lerp(initialColorRed, newColorRed, t);
+                        colorAdjustments.colorFilter.value = Color.Lerp(initialColorRed, 
+                                                                        newColorRed, 
+                                                                        t);
                         elapsedTime += Time.deltaTime;
                         yield return null;
                     }
@@ -220,7 +269,9 @@ public class PostProcessingController : MonoBehaviour
                     while (elapsedTime < duration)
                     {
                         float t = (elapsedTime - halfDuration) / halfDuration;
-                        colorAdjustments.colorFilter.value = Color.Lerp(newColorRed, initialColorRed, t);
+                        colorAdjustments.colorFilter.value = Color.Lerp(newColorRed, 
+                                                                        initialColorRed, 
+                                                                        t);
                         elapsedTime += Time.deltaTime;
                         yield return null;
                     }
@@ -229,11 +280,16 @@ public class PostProcessingController : MonoBehaviour
                 // Color Adjustments Green Setting //
                 case "ColorAdjustmentsGreen":
                     Color initialColorGreen = colorAdjustments.colorFilter.value;
-                    Color newColorGreen = new Color(ReverseIntensity, 1f, ReverseIntensity, 0f);
+                    Color newColorGreen = new Color(ReverseIntensity, 
+                                                    1f, 
+                                                    ReverseIntensity, 
+                                                    0f);
                     while (elapsedTime < halfDuration)
                     {
                         float t = elapsedTime / halfDuration;
-                        colorAdjustments.colorFilter.value = Color.Lerp(initialColorGreen, newColorGreen, t);
+                        colorAdjustments.colorFilter.value = Color.Lerp(initialColorGreen, 
+                                                                        newColorGreen, 
+                                                                        t);
                         elapsedTime += Time.deltaTime;
                         yield return null;
                     }
@@ -241,7 +297,9 @@ public class PostProcessingController : MonoBehaviour
                     while (elapsedTime < duration)
                     {
                         float t = (elapsedTime - halfDuration) / halfDuration;
-                        colorAdjustments.colorFilter.value = Color.Lerp(newColorGreen, initialColorGreen, t);
+                        colorAdjustments.colorFilter.value = Color.Lerp(newColorGreen, 
+                                                                        initialColorGreen, 
+                                                                        t);
                         elapsedTime += Time.deltaTime;
                         yield return null;
                     }

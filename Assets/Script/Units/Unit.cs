@@ -5,9 +5,12 @@
         [Header("Battle Manager")]
         public GameBattleManager battleManager;
         public PostProcessingController postProcessingManager;
-        [Header("Stats")]
+        [Header("Unit Properties")]
         public Stats stats;
         private Renderer meshRenderer;
+        private Animator Animator;
+        public bool AnimationFinished = true;
+        private Transform unitPosition;
         [Header("Skills")]
         public Skill[] skills;
 
@@ -25,6 +28,8 @@
         private void Awake()
         {
             meshRenderer = GetComponent<Renderer>();
+            Animator = GetComponent<Animator>();
+            unitPosition = GetComponent<Transform>();
             battleManager = FindFirstObjectByType<GameBattleManager>();
             postProcessingManager = FindFirstObjectByType<PostProcessingController>();
             currentHP = stats.HP;
@@ -45,16 +50,18 @@
         public void TakeDamage(float damage)
         {
             currentHP = ((currentHP*DefCalculation(currentDEF)) - damage)/DefCalculation(currentDEF);
-            if (currentHP <= 0)
-            {
-                currentHP = 0;
-                isAlive = false;
-            }
+            Animator.SetTrigger("TakeDamage");
             if(isPlayer && isFriendly)
             {
-                postProcessingManager.TemporaryEffect(2f, 0.5f,"Bloom");
-                postProcessingManager.TemporaryEffect(0.5f, 0.5f,"Vignette");
-                postProcessingManager.TemporaryEffect(0.3f, 0.5f,"ColorAdjustmentsRed",0.5f);
+                postProcessingManager.TemporaryEffect(2f, 
+                                                      0.5f,
+                                                      "Bloom");
+                postProcessingManager.TemporaryEffect(0.5f, 
+                                                      0.5f,
+                                                      "Vignette");
+                postProcessingManager.TemporaryEffect(0.3f, 
+                                                      0.5f,
+                                                      "ColorAdjustmentsRed",0.5f);
                 // Debug.Log("Current HP: " + currentHP + ", Max HP: " + stats.HP);
                 if(currentHP <= stats.HP * 0.3f)
                 {
@@ -67,14 +74,29 @@
             }
             else if(!isPlayer && isFriendly)
             {
-                postProcessingManager.TemporaryEffect(2f, 0.5f,"Bloom");
-                postProcessingManager.TemporaryEffect(1f, 0.5f,"Vignette");
-                postProcessingManager.TemporaryEffect(1f, 0.5f,"ColorAdjustmentsIntensity");
+                postProcessingManager.TemporaryEffect(2f, 
+                                                      0.5f,
+                                                      "Bloom");
+                postProcessingManager.TemporaryEffect(1f, 
+                                                      0.5f,
+                                                      "Vignette");
+                postProcessingManager.TemporaryEffect(1f, 
+                                                      0.5f,
+                                                      "ColorAdjustmentsIntensity");
             }
             else
             {
-                postProcessingManager.TemporaryEffect(2f, 0.5f,"Bloom");
-                postProcessingManager.TemporaryEffect(1f, 0.5f,"ColorAdjustmentsIntensity");
+                postProcessingManager.TemporaryEffect(2f, 
+                                                      0.5f,
+                                                      "Bloom");
+                postProcessingManager.TemporaryEffect(1f, 
+                                                      0.5f,
+                                                      "ColorAdjustmentsIntensity");
+            }
+            if (currentHP <= 0)
+            {
+                currentHP = 0;
+                OnDeath();
             }
         }
 
@@ -114,7 +136,8 @@
             currentSPD += stats.SPD * spd;
         }
 
-        public void UseSkill(int skillIndex, Unit[] target)
+        public void UseSkill(int skillIndex, 
+                             Unit[] target)
         {
             if (skillIndex >= 0 && skillIndex < skills.Length)
             {
@@ -125,5 +148,79 @@
             {
                 Debug.LogError("Invalid skill index: " + skillIndex);
             }
+        }
+
+        //interaction
+        public void InteractDamage(Unit[] targetUnit, 
+                                   float Damage)
+        {
+            // Implement interaction logic here
+            foreach (Unit unit in targetUnit)
+            {
+                unit.TakeDamage(Damage);
+            }
+        }
+
+        public void InteractHeal(Unit[] targetUnit, 
+                                 float Heal)
+        {
+            // Implement interaction logic here
+            foreach (Unit unit in targetUnit)
+            {
+                unit.Heal(Heal);
+            }
+        }
+
+
+        //Animation Related
+        public void AnimationStart()
+        {
+            AnimationFinished = false;
+        }
+
+        public void AnimationFinish()
+        {
+            AnimationFinished = true;
+        }
+        public void IsWalking(bool isWalking)
+        {
+            Animator.SetBool("IsWalking", isWalking);
+        }   
+
+        public void WalkToPosition(Vector3 targetPosition, 
+                                   float speed = 5f)
+        {
+            StartCoroutine(WalkToPositionCoroutine(targetPosition, speed));
+        }
+
+        private IEnumerator WalkToPosition(Vector3 targetPosition, 
+                                           float speed = 5f)
+        {
+            while (unitPosition.rotation != Quaternion.LookRotation(targetPosition - unitPosition.position))
+            {
+                unitPosition.rotation = Quaternion.RotateTowards(unitPosition.rotation, 
+                                                                 Quaternion.LookRotation(targetPosition - unitPosition.position), 
+                                                                 speed * Time.deltaTime);
+                yield return null;
+            }
+            unitPosition.rotation = Quaternion.LookRotation(targetPosition - unitPosition.position);
+            Animator.SetBool("IsWalking", true);
+            while (Vector3.Distance(unitPosition.position, 
+                                    targetPosition) > 0.1f)
+            {
+                unitPosition.position = Vector3.MoveTowards(unitPosition.position, 
+                                                            targetPosition, 
+                                                            speed * Time.deltaTime);
+                yield return null;
+            }
+            unitPosition.position = targetPosition;
+            Animator.SetBool("IsWalking", false);
+        }
+
+        private void OnDeath()
+        {
+            isAlive = false;
+            Animator.SetBool("Death", true);
+            // Additional logic for when the unit dies (e.g., play death animation, drop loot, etc.)
         }
     }

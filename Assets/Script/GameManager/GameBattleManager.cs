@@ -9,6 +9,8 @@ public class GameBattleManager : MonoBehaviour
     public Transform[] friendly_positions;
     public Transform[] enemy_positions;
     Unit[] unit_stats;
+    int friendly_count = 0;
+    int enemy_count = 0;
 
     [Header("Action Order")]
     public float[] ActionOrder;
@@ -19,8 +21,6 @@ public class GameBattleManager : MonoBehaviour
         number_of_units = units.Length;
         ActionOrder = new float[number_of_units];
         unit_stats = new Unit[number_of_units];
-        int friendly_count = 0;
-        int enemy_count = 0;
         for (int i = 0; i < number_of_units; i++)
         {
             unit_stats[i] = units[i].GetComponent<Unit>();

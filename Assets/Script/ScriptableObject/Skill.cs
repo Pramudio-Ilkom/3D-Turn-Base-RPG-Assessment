@@ -13,5 +13,6 @@ public abstract class Skill : ScriptableObject
     public string skillDescription;
 
     public abstract void Use(Unit caster, Unit[] target);
+    public abstract IEnumerator Use(Unit caster, Unit[] target);
 
 }
