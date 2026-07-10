@@ -7,15 +7,19 @@ public class DialogueManager : MonoBehaviour
 {
     [Header("Dialogue")]
     public Dialogue[] dialogues;
+    public TextMeshProUGUI characterName;
     public TextMeshProUGUI dialogueText;
     public GameObject dialogueBox;
     [Header("Dialogue Speed")]
     public float DialogueSpeed = 0.05f;
+    private int currentDialogueSetIndex = 0;
     private int currentDialogueIndex = 0;
+    private bool dialogueStillRun = false;
+    //private alias
 
     private void Awake()
     {
-            dialogueText = dialogueBox.GetComponent<TextMeshProUGUI>;
+        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,18 +35,31 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(int IndexDialogue)
     {
-        string[] dialogue = dialogues[IndexDialogue].dialogue;
         dialogueBox.SetActive(true);
+        currentDialogueSetIndex = IndexDialogue;
         currentDialogueIndex = 0;
-        DisplayNextDialogue(dialogue);
+        StartCoroutine(TypeDialogue(currentDialogueSetIndex,
+                                    currentDialogueIndex));
     }
 
-    public void DisplayNextDialogue(string[] dialogue)
+    private void showDialogue(int currentDialogueSetInput,
+                              int currentDialogueInput)
     {
-        if (currentDialogueIndex < dialogue.Length)
+        characterName.text = dialogues[currentDialogueSetInput].character[currentDialogueInput];
+        dialogueText.text = dialogues[currentDialogueSetInput].dialogue[currentDialogueInput];
+    }
+
+    public void DisplayNextDialogue()
+    {
+        if(dialogueStillRun)
         {
-            StartCoroutine(TypeDialogue(dialogue[currentDialogueIndex]));
+            SkipDialogue();
+        }
+        if (currentDialogueIndex < dialogues[currentDialogueSetIndex].dialogue.Length - 1)
+        {
             currentDialogueIndex++;
+            StartCoroutine(TypeDialogue(currentDialogueSetIndex,
+                                        currentDialogueIndex));
         }
         else
         {
@@ -52,23 +69,30 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
-        dialogueBox.SetActive(false);
+        // dialogueBox.SetActive(false);
+        characterName.text = "wes";
+        dialogueText.text = "dah kelar";
+
     }
 
-    private IEnumerator TypeDialogue(string dialogue)
+    private IEnumerator TypeDialogue(int currentDialogueSetInput,
+                                     int currentDialogueInput)
     {
-        dialogueText.text = dialogue;
+        dialogueStillRun = true;
+        showDialogue(currentDialogueSetInput,
+                     currentDialogueInput);
         dialogueText.maxVisibleCharacters = 0;
-        while (dialogueText.maxVisibleCharacters < dialogue.Length)
+        while (dialogueText.maxVisibleCharacters < dialogues[currentDialogueSetIndex].dialogue[currentDialogueIndex].Length)
         {
             dialogueText.maxVisibleCharacters++;
             yield return new WaitForSeconds(DialogueSpeed);
         }
+        dialogueStillRun = false;
     }
 
-    public void SkipDialogue(string dialogue)
+    public void SkipDialogue()
     {
         StopAllCoroutines();
-        dialogueText.maxVisibleCharacters = dialogue.Length;
+        dialogueText.maxVisibleCharacters = dialogues[currentDialogueSetIndex].dialogue[currentDialogueIndex].Length;
     }
 }

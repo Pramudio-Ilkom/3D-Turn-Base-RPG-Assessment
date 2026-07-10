@@ -27,6 +27,7 @@ public class Unit : MonoBehaviour
     public bool isPlayer;
     public bool isAlive;
     public bool isFriendly;
+    public bool Turn = false;
 
     private void Awake()
     {
@@ -203,12 +204,18 @@ public class Unit : MonoBehaviour
     {
         AnimationStart();
         Vector3 WalkTarget = targetPosition;
+        Quaternion targetRotation = Quaternion.LookRotation(WalkTarget - unitPosition.position);
         animator.SetTrigger("Stop");
-        unitPosition.rotation = Quaternion.RotateTowards(unitPosition.rotation, 
-                                                         Quaternion.LookRotation(WalkTarget - unitPosition.position), 
-                                                         2f);
-        yield return new WaitForSeconds(2f);
-        unitPosition.rotation = Quaternion.LookRotation(WalkTarget - unitPosition.position);
+        while (Quaternion.Angle(unitPosition.rotation, targetRotation) > 0.1f)
+        {
+            unitPosition.rotation = Quaternion.RotateTowards(
+                unitPosition.rotation,
+                targetRotation,
+                180f * Time.deltaTime); // degrees per second
+            yield return null;
+        }
+        unitPosition.rotation = targetRotation;
+        Debug.Log("Its Done 1");
         animator.SetBool("Walk", true);
         while (Vector3.Distance(unitPosition.position, 
                                 WalkTarget) > 0.1f)
@@ -218,14 +225,21 @@ public class Unit : MonoBehaviour
                                                         speed * Time.deltaTime);
             yield return null;
         }
+        Debug.Log("Its Done 2");
         animator.SetBool("Walk", false);
-        AnimationFinish();
-        unitPosition.rotation = Quaternion.RotateTowards(unitPosition.rotation, 
-                                                        faceToward, 
-                                                        2f);
-            yield return new WaitForSeconds(2f);
-            unitPosition.rotation = faceToward;
+        while (Quaternion.Angle(unitPosition.rotation, faceToward) > 0.1f)
+        {
+            unitPosition.rotation = Quaternion.RotateTowards(
+                unitPosition.rotation,
+                faceToward,
+                180f * Time.deltaTime);
+
+            yield return null;
+        }
+        unitPosition.rotation = faceToward;
         unitPosition.position = WalkTarget;
+        AnimationFinish();
+        Debug.Log("Its Done 3");
     }
 
     private void OnDeath()

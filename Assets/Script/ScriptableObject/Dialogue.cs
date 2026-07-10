@@ -6,5 +6,6 @@ public class Dialogue : ScriptableObject
     [Header("Dialogue Name")]
     public string dialogueName;
     [Header("Dialogue")]
+    public string[] character;
     public string[] dialogue;
 }

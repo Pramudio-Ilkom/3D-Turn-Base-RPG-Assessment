@@ -1,4 +1,6 @@
 using System.Data;
+using System.Collections;
+
 using UnityEngine;
 
 public class GameBattleManager : MonoBehaviour
@@ -15,9 +17,6 @@ public class GameBattleManager : MonoBehaviour
     [Header("Action Order")]
     public float[] ActionOrder;
     int whoseturn;
-
-    //testing
-    public Unit[] Kontol = new Unit[1];
 
     //testing
 
@@ -50,9 +49,7 @@ public class GameBattleManager : MonoBehaviour
     void Start()
     {
         ActionOrderStart();
-        Kontol[0] = unit_stats[1];
-        unit_stats[0].UseSkill(0, 
-                               Kontol);
+        StartAction();
     }
 
     // Update is called once per frame
@@ -67,6 +64,7 @@ public class GameBattleManager : MonoBehaviour
         {
             ActionOrder[i] = unit_stats[i].ActionValue();
         }
+        Debug.Log(ActionOrder);
     }
     void StartAction()
     {
@@ -76,10 +74,101 @@ public class GameBattleManager : MonoBehaviour
             if (ActionOrder[i] == MinimumValue)
             {
                 whoseturn = i;
+                ActionOrder[i] -= MinimumValue;
             }
             else
             {
                 ActionOrder[i] -= MinimumValue;
+            }
+        }
+        StartCoroutine(Action(whoseturn));
+    }
+
+    IEnumerator Action(int WhoseTurn)
+    {
+        Debug.Log("TurnStart");
+        Unit CurrentTurn = unit_stats[WhoseTurn];
+
+        CurrentTurn.Turn = true;
+        if(CurrentTurn.isPlayer)
+        {
+            //there will be function here
+        }
+        else
+        {
+            int skillIndexUse = Random.Range(0,CurrentTurn.skills.Length-1);
+            Unit[] Target = new Unit[1];
+            if(CurrentTurn.skills[skillIndexUse].Damage)
+            {
+                Target[0] = unit_stats[CorrectTarget(CurrentTurn)];
+                CurrentTurn.UseSkill(skillIndexUse, Target);
+            }
+            else
+            {
+                Target[0] = unit_stats[CorrectTarget(CurrentTurn,
+                                                     false)];
+                CurrentTurn.UseSkill(skillIndexUse, Target);
+            }
+        }
+        yield return new WaitUntil(() => !CurrentTurn.Turn);
+        ActionOrder[WhoseTurn] = CurrentTurn.ActionValue();
+        StartAction();
+        Debug.Log("Turn End");
+    }
+
+    int CorrectTarget(Unit unit, 
+                      bool damage = true) //if true then it target its enemy
+    {
+        int TargetIndex = Random.Range(0,number_of_units);
+        Unit Target = unit_stats[TargetIndex];
+        if(damage)
+        {
+            if(unit.isFriendly)
+            {
+                if(Target.isFriendly)
+                {
+                    return CorrectTarget(unit);
+                }
+                else
+                {
+                    return TargetIndex;
+                }
+            }
+            else
+            {
+                if(Target.isFriendly)
+                {
+                    return TargetIndex;
+                }
+                else
+                {
+                    return CorrectTarget(unit);
+                }
+            }
+        }
+        else
+        {
+            if(unit.isFriendly)
+            {
+                if(Target.isFriendly)
+                {
+                    return TargetIndex;
+                }
+                else
+                {
+                    return CorrectTarget(unit);
+                }
+            }
+            else
+            {
+                if(Target.isFriendly)
+                {
+                    return CorrectTarget(unit);
+                }
+                else
+                {
+                    return TargetIndex;
+                }
             }
         }
     }

@@ -17,7 +17,7 @@ public class BasicAttack : Skill
         Vector3 TargetLocation = target[target.Length/2].unitPosition.position;
         TargetLocation.z -= 1;
         Quaternion OriginalRotation = caster.unitPosition.rotation;
-        Quaternion faceToward = target[target.Length/2].unitPosition.rotation;
+        Quaternion faceToward = Quaternion.LookRotation(TargetLocation - OriginalLocation);
         caster.WalkToPosition(TargetLocation,
                               faceToward,
                               5f);
@@ -27,6 +27,9 @@ public class BasicAttack : Skill
         caster.WalkToPosition(OriginalLocation,
                               OriginalRotation,
                               5f);
+        yield return new WaitUntil(() => caster.AnimationFinished);
+        // yield return new WaitUntil(() => caster.AnimationFinished);
+        caster.Turn = false;
     }
 
     //effect
