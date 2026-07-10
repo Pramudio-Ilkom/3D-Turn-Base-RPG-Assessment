@@ -15,7 +15,7 @@ public class DialogueManager : MonoBehaviour
 
     private void Awake()
     {
-
+            dialogueText = dialogueBox.GetComponent<TextMeshProUGUI>;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
